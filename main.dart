@@ -1,92 +1,104 @@
 import 'package:flutter/material.dart';
-import 'package:planner_app_1/sun.dart';
+import 'package:planner_app_1/day.dart';
+
 void main() {
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.indigo,
+      debugShowCheckedModeBanner: false,
+      title: 'HomePage',
+      theme: ThemeData(scaffoldBackgroundColor: const Color.fromARGB(255, 0, 0, 0),
+        primarySwatch: Colors.indigo,textTheme: const TextTheme(titleMedium: TextStyle(color: Colors.white)),
       ),
-      home: Column( mainAxisSize: MainAxisSize.max,
-     children: <Widget>[ SizedBox(height:75, width: 400, child:const MyHomePage(title: "",)),
-     Expanded(
-        child: const Days())
-        
-     ],
-    ),
+      home: const MyHomePage(),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
 
-  final String title;
+  const MyHomePage({super.key});
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
+   int index = 0;
+   void onTap(int i) {
     setState(() {
-      _counter++;
+      index = i;
     });
+
   }
+  
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar( title: Text("Weekly Planner $_counter"), centerTitle: true, backgroundColor: Colors.cyan, toolbarHeight: 35,
-      
-    ), 
-    );
-  
     
-  }
-  
-}
-class Days extends StatefulWidget{
-   const Days({ super.key });
-
-  @override
-  State<Days> createState() => _Days();
-
-  
-}
-class _Days extends State<Days> {
-  @override
- Widget build (BuildContext context){
-    final daysOfWeek = {'Sun': () {Navigator.push(context,
-                           MaterialPageRoute(
-                              builder: (context) => sun()));}, 'Mon': () {},'Tue': () {},'Wed': () {},'Thu': () {},'Fri': () {},'Sat': () {}};
-
-    List<Widget> dayWidgets = [];
-
-    for (final key in daysOfWeek.keys) {
-      dayWidgets.add(Expanded(
-     
-      child:ElevatedButton( 
-                onPressed: daysOfWeek[key],
-                style: TextButton.styleFrom(backgroundColor: Colors.cyan[400]),
-                child: Text(key, style: TextStyle(color: Colors.black, fontSize: 12),)) ,
-      ));
+    final List<Widget> days = [];
+    for(int i = 0; i<7;i++){
+      days.add(Day(key:Key(i.toString()),title:i.toString()));
     }
 
-    return Row( mainAxisSize: MainAxisSize.max, crossAxisAlignment: CrossAxisAlignment.start,
-    children:dayWidgets,);
-    
-  }
+    return Scaffold(
+      appBar: AppBar( title: const Text("Weekly Planner"), centerTitle: true, 
+      backgroundColor: const Color.fromARGB(255, 0, 0, 0), toolbarHeight: 35,),
+      body: Stack(       
+        children: [
+          Offstage(offstage: index != 0, child: days[0],),
+          Offstage(offstage: index != 1, child: days[1],),
+          Offstage(offstage: index != 2, child: days[2],),
+          Offstage(offstage: index != 3, child: days[3],),
+          Offstage(offstage: index != 4, child: days[4],),
+          Offstage(offstage: index != 5, child: days[5],),
+          Offstage(offstage: index != 6, child: days[6],),
+        ],
+       
+      ),
+      bottomNavigationBar: BottomNavigationBar(backgroundColor: Colors.black,
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(Icons.circle),
+            label: 'Sun',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.circle),
+            label: 'Mon',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.circle),
+            label: 'Tues',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.circle),
+            label: 'Wed',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.circle),
+            label: 'Thurs',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.circle),
+            label: 'Fri',
+          ),
+         BottomNavigationBarItem(
+            icon: Icon(Icons.circle),
+            label: 'Sat',
+          ),
+        ],
+         currentIndex: index,
+         selectedItemColor: Colors.cyan[800], unselectedItemColor: const Color.fromARGB(255, 63, 68, 81),
+         onTap: onTap, 
+        ),);
+  
+  } 
 }
 
 
